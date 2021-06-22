@@ -159,6 +159,7 @@ sed 's/(/NEW(/' $NEW_OUTPUT_DIR/$ANALYSIS/bnet/GroundTruth.txt > $NEW_OUTPUT_DIR
                                   > $NEW_OUTPUT_DIR/$ANALYSIS/$MERGED/named_cons_all.txt \
                                   2> $NEW_OUTPUT_DIR/$ANALYSIS/$MERGED/keep-derivable.log
 
+
 # Sanity check
 if [[ $(comm -13 <(sort $NEW_OUTPUT_DIR/$ANALYSIS/$MERGED/SemAllAlarm.txt.ukd) \
                  <(sort $NEW_OUTPUT_DIR/$ANALYSIS/$MERGED/SemAllAlarm.txt)) ]]; then

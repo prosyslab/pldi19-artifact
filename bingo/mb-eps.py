@@ -49,6 +49,19 @@ logging.info('Hello!')
 def lit2Tuple(literal):
     return literal if not literal.startswith('NOT ') else literal[len('NOT '):]
 
+basicTuples = ["DUEdge", "DUPath", "TrueCond", "TrueBranch", "FalseCond", "FalseBranch", "Alarm"]
+
+def isBasicTuple(t):
+    return t.split('(')[0] in basicTuples
+
+def clause2BasicAntecedents(clause):
+    lst = [ lit2Tuple(literal) for literal in clause[:-1] ]
+    return frozenset([ant for ant in lst if isBasicTuple(ant) ])
+
+def antecedents2BasicAntecedents(ants):
+    new_ants = frozenset([x for x in ants if isBasicTuple(x)])
+    return frozenset(new_ants)
+
 def clause2Antecedents(clause):
     return frozenset([ lit2Tuple(literal) for literal in clause[:-1] ])
 
@@ -67,10 +80,23 @@ def readClauses(filename):
             for ruleName, clauseList in rcls }
     return frozenset(rcs)
 
+# transform clauses to reduced ones without BayeSmith features
+def readBasicClauses(filename):
+    lines = { line.strip() for line in open(filename) }
+    rlines = { tuple([ cle.strip() for cle in line.split(':') if len(cle.strip()) > 0 ]) for line in lines }
+    for ruleName, clauseStr in rlines: assert ruleName.count(' ') == 0
+    rcls = { (ruleName, tuple([ literal.strip() for literal in clauseStr.split(', ') ])) \
+             for ruleName, clauseStr in rlines }
+    rcs = { (ruleName, clause2BasicAntecedents(clauseList), clause2Consequent(clauseList)) \
+            for ruleName, clauseList in rcls }
+    return frozenset(rcs)
+
+
 # 0a. Read clauses
 
 oldClauses = readClauses(oldConsFilename)
 newClauses = readClauses(newConsFilename)
+oldBasicClauses = readBasicClauses(oldConsFilename)
 logging.info('Read {} old clauses and {} new clauses'.format(len(oldClauses), len(newClauses)))
 commonClauses = oldClauses & newClauses
 logging.info('{} clauses occur in common between the two sets'.format(len(commonClauses)))
@@ -139,8 +165,14 @@ if 'DISABLE_CCH' not in os.environ:
 # 1. Split Tuples and Clauses
 
 def markTuple(t, mark): return t.replace('(', '{}('.format(mark))
-def markTupleOld(t): return markTuple(t, 'OLD')
-def markTupleNew(t): return markTuple(t, 'NEW')
+def markTupleOld(t):
+    if isBasicTuple(t):
+        return markTuple(t, 'OLD')
+    else: return t
+def markTupleNew(t):
+    if isBasicTuple(t):
+        return markTuple(t, 'NEW')
+    else: return t
 
 def makeCombinations(antecedents):
     if not antecedents: return { frozenset() }
@@ -169,7 +201,7 @@ for ruleName, antecedents, consequent in newClauses:
     consequentOld = markTupleOld(consequent)
     consequentNew = markTupleNew(consequent)
 
-    if (ruleName, antecedents, consequent) in oldClauses:
+    if (ruleName,  antecedents2BasicAntecedents(antecedents), consequent) in oldBasicClauses:
         splitClauses.add((ruleName, antCombinationAllOld, consequentOld))
         emittedConsequents.add(consequentOld)
 
@@ -187,6 +219,19 @@ for t in allNewEDBs & allOldEDBs:
     tOld = markTupleOld(t)
     splitClauses.add(('Rneps', frozenset(), tOld))
     emittedConsequents.add(tOld)
+
+for t in allNewEDBs:
+    if not isBasicTuple(t):
+        tNew = markTupleNew(t)
+        splitClauses.add(('Rtheta', frozenset(), tNew))
+        emittedConsequents.add(tNew)
+
+for t in allOldEDBs:
+    if not isBasicTuple(t):
+        tNew = markTupleOld(t)
+        splitClauses.add(('Rtheta', frozenset(), tNew))
+        emittedConsequents.add(tNew)
+
 # 1c. Print output
 
 with open(mergedConsFilename, 'w') as outFile:
@@ -210,6 +255,10 @@ with open(allEDBFilename, 'w') as outFile:
             pass
         else: print(markTupleNew(t), file=outFile)
 
+    for t in allOldEDBs:
+        if not isBasicTuple(t) :
+            print(markTupleOld(t), file=outFile)
+
 # 2b. EDB tuples
 # In contrast to mb.py, we are not silencing new EDB tuples
 # We instead just perform some sanity checks
@@ -218,7 +267,9 @@ combinedTuples = { ant for ruleName, antecedents, consequent in splitClauses for
                  { consequent for ruleName, antecedents, consequent in splitClauses }
 
 for t in allNewEDBs:
-    if t not in allOldEDBs:
+    if not isBasicTuple(t):
+        continue
+    elif t not in allOldEDBs:
         tOld = markTupleOld(t)
         assert tOld not in combinedTuples
     else:

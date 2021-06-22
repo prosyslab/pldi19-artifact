@@ -68,9 +68,10 @@ for clause in clauses:
         assert antRelName == 'DUPath'
         assert antFields == alarmFields
 
-        newAnts = frozenset({ antecedentDUPath, 'FX({})'.format(antFields) })
+        newAnts = set(clause[1])
+        newAnts.add('FX({})'.format(antFields))
 
-        ans.add((clause[0], newAnts, clause[2]))
+        ans.add((clause[0], frozenset(newAnts), clause[2]))
 
 ########################################################################################################################
 # 3. Print Output
