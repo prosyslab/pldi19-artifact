@@ -10,9 +10,12 @@ set -e
 
 PGM=$1
 ANALYSIS=$2
+PGAM=$3
 BASE=$(basename $PGM)
 BENCHMARK_DIR=$(dirname $PGM)
 OUTPUT_DIR=$BENCHMARK_DIR/sparrow-out
+SOUFFLE=/home/hyunsu/workspace/pldi19-artifact/souffle/src/souffle
+DL_FILE_DIR=/home/hyunsu/workspace/pldi19-artifact/datalog/
 echo $BASE
 OPT_DEFAULT="-unsound_alloc -extract_datalog_fact_full -outdir $OUTPUT_DIR"
 if [[ "$BASE" =~ shntool.+ ]] ||
@@ -82,9 +85,9 @@ echo "Sparrow completes ($ELAPSED_TIME sec)"
 START_TIME=$SECONDS
 echo "Running Souffle"
 if [[ $ANALYSIS == "interval" ]]; then
-  souffle -F $OUTPUT_DIR/interval/datalog -D $OUTPUT_DIR/interval/datalog datalog/BufferOverflow.dl
+  $SOUFFLE -F $OUTPUT_DIR/interval/datalog -D $OUTPUT_DIR/interval/datalog datalog/BufferOverflow.dl.$PGAM
 else
-  souffle -F $OUTPUT_DIR/taint/datalog -D $OUTPUT_DIR/taint/datalog datalog/IntegerOverflow.dl
+  $SOUFFLE -F $OUTPUT_DIR/taint/datalog -D $OUTPUT_DIR/taint/datalog datalog/IntegerOverflow.dl.$PGAM
 fi
 ELAPSED_TIME=$(($SECONDS - $START_TIME))
 echo "Souffle completes ($ELAPSED_TIME sec)"
@@ -97,11 +100,8 @@ echo "Souffle completes ($ELAPSED_TIME sec)"
 
 START_TIME=$SECONDS
 echo "Building Bayesian Network"
-bingo/generate-named-cons.py $OUTPUT_DIR $ANALYSIS
-cat $OUTPUT_DIR/$ANALYSIS/datalog/Alarm.facts |
-  sed 's/^/Alarm(/' |
-  sed 's/\t/,/' | sed 's/$/)/g' \
-    >$OUTPUT_DIR/$ANALYSIS/bnet/Alarm.txt
+bingo/generator $ANALYSIS $OUTPUT_DIR bnet $DL_FILE_DIR $PGAM
+bingo/generate-alarm.sh $OUTPUT_DIR $ANALYSIS bnet Alarm.csv
 
 ####
 # 4b. Eliminate cycles, optimize network, build factor graph

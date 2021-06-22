@@ -1,0 +1,11 @@
+Name,Version,Atyp
+shntool,3.0.5,taint
+latex2rtf,2.1.1,taint
+urjtag,0.8,taint
+optipng,0.5.3,taint
+wget,1.12,interval
+readelf,2.24,interval
+grep,2.19,interval
+sed,4.3,interval
+sort,7.2,interval
+tar,1.28,interval

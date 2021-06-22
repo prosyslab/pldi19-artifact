@@ -6,3 +6,5 @@ bingo/prune-cons/prune-cons-unopt
 bingo/prune-cons/keep-derivable
 rule-prob.txt
 __pycache__
+docker-output
+paper339-old.tar

@@ -1,0 +1,345 @@
+#!/usr/bin/env python3
+
+import matplotlib
+import matplotlib.pyplot as plt
+import pandas as pd
+import argparse
+import os
+import errno
+import json
+import numpy as np
+
+BASE_DIR = os.path.dirname(__file__)
+FACTS_TXT = os.path.join(BASE_DIR, "facts.txt")
+BENCH_TXT = os.path.join(BASE_DIR, "benchmarks.txt")
+PROJECT_HOME = os.path.abspath(os.path.join(BASE_DIR, os.pardir, os.pardir))
+DOCKER_OUT_DIR = os.path.join(PROJECT_HOME, "docker-output")
+BENCH_OUT_DIR = os.path.join(PROJECT_HOME, "benchmark")
+MIN_V = 0.01
+PRETTY_DST = "images-final"
+
+def get_benchmark_info(benchmark):
+    """Return version of the benchmark and analysis type by sparrow.
+    """
+    benchmark_df = pd.read_csv(BENCH_TXT, header=0)
+    version = ""
+    analysis_type = ""
+    for _, row in benchmark_df.iterrows():
+        if row['Name'] == benchmark:
+            version = row['Version']
+            analysis_type = row['Atyp']
+    if not version:
+        print('Error: ' + benchmark + ' is not known. Check benchmarks.txt')
+        exit(1)
+    return version, analysis_type
+
+
+def get_bingo_combined(ts):
+    if ts == "bingo":
+        return "bingo_combined"
+    else:
+        return "bingo_delta_sem-eps_strong_{}_combined".format(ts)
+
+
+def get_data_path(benchmark, direc):
+    version, atyp = get_benchmark_info(benchmark)
+    bingo_combined_dir = get_bingo_combined("0.001")
+    try:
+        with open(FACTS_TXT, 'r') as f:
+            benchmarks_dir = f.read().strip()
+            data_path = os.path.join(benchmarks_dir, benchmark + "-" + version,
+                                     'sparrow-out', atyp,
+                                     bingo_combined_dir)
+            return data_path
+    except FileNotFoundError as e:
+        print('Error: ', e)
+        print('Error: Check if facts.txt exists')
+        print('Error: Make sure your configuration succeeds')
+        exit(1)
+
+
+def get_data_path_dict(benchmark):
+    data_path_dict = {}
+    for d in [DOCKER_OUT_DIR, BENCH_OUT_DIR]:
+        data_path = get_data_path(benchmark, d)
+        data_path_dict[t] = data_path
+    return data_path_dict
+
+
+def get_alarm_path(benchmark):
+    version, atyp = get_benchmark_info(benchmark)
+    try:
+        with open(FACTS_TXT, 'r') as f:
+            benchmarks_dir = f.read().strip()
+            alarm_path = os.path.join(benchmarks_dir, benchmark, version,
+                                     'sparrow-out', atyp,
+                                     'bnet', 'Alarm.txt')
+            return alarm_path
+    except FileNotFoundError as e:
+        print('Error: ', e)
+        print('Error: Check if facts.txt exists')
+        print('Error: Make sure your configuration succeeds')
+        exit(1)
+
+def get_cons_all2bnet_path(benchmark, timestamp):
+    version, atyp = get_benchmark_info(benchmark)
+    try:
+        with open(FACTS_TXT, 'r') as f:
+            benchmarks_dir = f.read().strip()
+            alarm_path = os.path.join(benchmarks_dir, benchmark, version,
+                                     'sparrow-out', atyp,
+                                     'bnet-' + timestamp, 'cons_all2bnet.log')
+            return alarm_path
+    except FileNotFoundError as e:
+        print('Error: ', e)
+        print('Error: Check if facts.txt exists')
+        print('Error: Make sure your configuration succeeds')
+        exit(1)
+
+def get_bingo_stat_path(benchmark, timestamp):
+    version, atyp = get_benchmark_info(benchmark)
+    try:
+        with open(FACTS_TXT, 'r') as f:
+            benchmarks_dir = f.read().strip()
+            alarm_path = os.path.join(benchmarks_dir, benchmark, version,
+                                     'sparrow-out', atyp,
+                                     'bingo_stats-' + timestamp + '.txt')
+            return alarm_path
+    except FileNotFoundError as e:
+        print('Error: ', e)
+        print('Error: Check if facts.txt exists')
+        print('Error: Make sure your configuration succeeds')
+        exit(1)
+
+
+def get_num_alarms(benchmark):
+    txt_path = get_alarm_path(benchmark)
+    with open(txt_path, 'r') as f:
+        return len(f.readlines())
+
+def get_img_path(timestamps, is_pretty):
+    if is_pretty:
+        return os.path.join(BASE_DIR, PRETTY_DST)
+    else:
+        stamp = "+".join(timestamps)
+        return os.path.join(BASE_DIR, "images-" + stamp)
+
+
+def get_benchmarks():
+    """Get list of benchmarks which are candidate benchmark.
+    """
+    df = pd.read_csv(BENCH_TXT, header=0, usecols=['Name'])
+    return df['Name'].to_list()
+
+def get_label(alarm, is_pretty):
+    if not is_pretty:
+        return "", "", 6, alarm
+    elif 'baseline' in alarm:
+        return "dashed", "o", 6, "Bingo"
+    else:
+        return "solid", "*", 8, "BayeSmith"
+
+
+class Plotter:
+    def __init__(self, benchmark, timestamps, is_pretty):
+        self.benchmark = benchmark
+        self.timestamps = timestamps
+        self.rank_history = {}
+        self.data_path_dict = get_data_path_dict(benchmark)
+        self.num_alarms = get_num_alarms(benchmark)
+        self.img_path = get_img_path(timestamps, is_pretty)
+        self.is_pretty = is_pretty
+        print('[Info] ' + benchmark + ' is specified')
+        print('[Info] # Alarms: ' + str(self.num_alarms))
+
+    def try_import_render_console(self):
+        try:
+            import tkinter
+            matplotlib.use('TkAgg')
+        except ImportError:
+            print(
+                'Warning: One should install tkinter to render plot in local console'
+            )
+            return False
+        return True
+
+    def transform_data(self):
+        for timestamp, data_path in self.data_path_dict.items():
+            try:
+                df = pd.read_csv(os.path.join(data_path, 'init.out'),
+                                 sep='\t',
+                                 header=0,
+                                 usecols=['Rank', 'Ground', 'Tuple'])
+            except IOError as e:
+                print('Error: ', e)
+                print('Error: Check if init.out exists in ' + data_path)
+                exit(1)
+
+            filtered_df = df[df.Ground == 'TrueGround'].reset_index(
+                drop=True)[['Rank', 'Tuple']]
+            for _, true_alarm in filtered_df.iterrows():
+                self.rank_history[true_alarm['Tuple'] + '@' +
+                                  timestamp] = [true_alarm['Rank']]
+
+            worklist = os.listdir(data_path)
+            num_work = len(worklist) - 2
+            for work in range(num_work):
+                try:
+                    df = pd.read_csv(os.path.join(data_path,
+                                                  str(work) + '.out'),
+                                     sep='\t',
+                                     header=0,
+                                     usecols=['Rank', 'Ground', 'Tuple'])
+                except IOError as e:
+                    print('Error: ', e)
+                    print('Error: Check if ' + str(work) + '.out exists in' +
+                          data_path)
+                    exit(1)
+
+                filtered_df = df[df.Ground == 'TrueGround'].reset_index(
+                    drop=True)[['Rank', 'Tuple']]
+                for _, true_alarm in filtered_df.iterrows():
+                    self.rank_history[true_alarm['Tuple'] + '@' +
+                                      timestamp] += [true_alarm['Rank']]
+
+    def compute_avg_bingo_feedbk_time(self):
+        for timestamp in self.timestamps:
+            bingo_stat_path = get_bingo_stat_path(self.benchmark, timestamp)
+            df = pd.read_csv(bingo_stat_path, sep='\t', header=0, usecols=['Time(s)'])
+            print("[Info] Avg Bingo feedback time at " + timestamp + ":")
+            print(df.mean())
+
+    def measure_bnet_size(self):
+        for timestamp in self.timestamps:
+            cons_all2bnet_path = get_cons_all2bnet_path(self.benchmark, timestamp)
+            with open(cons_all2bnet_path, 'r') as f:
+                lines = f.readlines()
+                num_clauses = lines[0].split(' ')[-2]
+                num_tuples = lines[1].split(' ')[-2]
+            print("[Info] @{} #T, #C: {}\t&\t{}".format(timestamp, num_tuples, num_clauses))
+
+
+    def make_dir(self):
+        """Make a directory where plots are being saved.
+        """
+        try:
+            os.mkdir(self.img_path)
+        except OSError as e:
+            if e.errno != errno.EEXIST:
+                print('Error: ', e)
+                exit(1)
+
+
+    def count_vc(self):
+        dic = {}
+        for alarm, _ in self.rank_history.items():
+            ts = alarm.split('@')[-1]
+            dic[ts] = []
+        for alarm, rank in self.rank_history.items():
+            temp = 0
+            for i in range(len(rank) - 1):
+                diff = rank[i + 1] - rank[i]
+                # if diff > 0:
+                vc_size = diff / float(self.num_alarms)
+                if vc_size > MIN_V:
+                    ts = alarm.split('@')[-1]
+                    dic[ts] += [ diff ]
+        for ts, vc_lst in dic.items():
+            print("[Info] # VC in " + ts + ": " + str(len(vc_lst)))
+            if len(vc_lst) == 0:
+                avg = "0.0"
+            else:
+                avg = sum(vc_lst) / len(vc_lst)
+            print("[Info] @{} #FG, Avg. VC size :{}\t&\t{}".format(ts, str(len(vc_lst)), str(avg)))
+
+    def render_or(self, is_saving=True, fname=None):
+        """Render plot by traversing over history of each alarm.
+
+        It takes save option into account on demand.
+        """
+        plt.rcParams['axes.titlepad'] = 10
+        plt.rcParams['xtick.major.pad'] = 0
+        plt.rcParams['ytick.major.pad'] = 0
+        plt.rcParams['xtick.labelsize'] = 20
+        plt.rcParams['ytick.labelsize'] = 20
+        plt.rcParams['legend.fontsize'] = 25
+        plt.figure(figsize=(11.3, 10))
+        pos = '111'
+        plt.subplot(pos)
+        if self.is_pretty:
+            new_dict = {}
+            for alarm in reversed(list(self.rank_history.keys())):
+                rank = self.rank_history[alarm]
+                ts = alarm.split('@')[-1]
+                if ts in new_dict:
+                    new_dict[ts] = np.add(new_dict[ts], rank)
+                else:
+                    new_dict[ts] = rank
+            for timestamp, rank in new_dict.items():
+                linestyle, marker, markersize, label = get_label(timestamp, self.is_pretty)
+                plt.plot(rank, linestyle=linestyle, marker=marker, markersize=markersize, markevery=5, label=label, linewidth=3)
+        else:
+            for alarm in reversed(list(self.rank_history.keys())):
+                rank = self.rank_history[alarm]
+                linestyle, marker, markersize, label = get_label(alarm, self.is_pretty)
+                plt.plot(rank, linestyle=linestyle, marker=marker, markersize=markersize, markevery=5, label=label, linewidth=3)
+        plt.ylabel('Rank', size=30)
+        plt.xlabel('User interaction', size=30)
+        plt.xticks(size=25)
+        plt.yticks(size=25)
+        plt.legend(loc='upper right', borderaxespad=0.5, fancybox=True, fontsize=30)
+        plt.suptitle(self.benchmark, fontsize=35)
+        plt.subplots_adjust(top=0.9, right=0.97, bottom=0.1, wspace = 0.25)
+        if is_saving:
+            if not fname:
+                fname = self.benchmark + '.pdf'
+            save_path = os.path.join(self.img_path, fname)
+            print('saved at', save_path)
+            plt.savefig(save_path, format='pdf')
+
+    def show(self):
+        if self.try_import_render_console():
+            plt.show()
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Plotting rank history')
+    parser.add_argument('benchmark',
+                        metavar='BENCHMARK',
+                        help="name of target benchmark",
+                        choices=get_benchmarks())
+    parser.add_argument('timestamp',
+                        metavar='TIMESTAMP',
+                        nargs='+',
+                        help="timestamp(s) of ranking execution")
+    parser.add_argument('-s',
+                        '--show',
+                        action='store_true',
+                        help="render plot in local console")
+    parser.add_argument('-p',
+                        '--pretty',
+                        action='store_true',
+                        help="render pretty plot")
+    parser.add_argument('--no-save',
+                        action='store_true',
+                        help="do not save the plot")
+    parser.add_argument('-o',
+                        '--output',
+                        metavar="OUTPUT_FILE",
+                        help="name of output file")
+    args = parser.parse_args()
+
+    plotter = Plotter(args.benchmark, args.timestamp, args.pretty)
+    plotter.transform_data()
+    save = not args.no_save
+    if save:
+        plotter.make_dir()
+    else:
+        print('[Info] no-save option is set')
+    #plotter.count_vc()
+    #plotter.compute_avg_bingo_feedbk_time()
+    #plotter.measure_bnet_size()
+    plotter.render_or(save, args.output)
+    if args.show:
+        print('[Info] show option is set')
+        plotter.show()

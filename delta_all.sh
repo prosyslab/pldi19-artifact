@@ -99,5 +99,5 @@ echo "readelf"
 run_readelf
 echo "sort"
 run_sort
-echo "tar"
-run_tar
+#echo "tar"
+#run_tar

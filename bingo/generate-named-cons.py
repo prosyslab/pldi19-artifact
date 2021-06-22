@@ -227,7 +227,7 @@ elif analysis == 'taint':
         for line in open(problem_dir + '/' + analysis + '/datalog/Deriv_DUPath5.csv'):
             cons = generate_integer_overflow('DUPath5', line)
             output_file.write(cons)
-        for line in open(problem_dir + '/' + analysis + '/datalog/Alarm.facts'):
+        for line in open(problem_dir + '/' + analysis + '/datalog/SparrowAlarm.facts'):
             cons = generate_alarm(line)
             output_file.write(cons)
 else:

@@ -1,0 +1,124 @@
+# dune build src/learn.exe
+# OCAMLPARAM: unset
+# Workspace root: /home/hyunsu/workspace/pldi19-artifact/bingo
+$ /usr/bin/nproc > /tmp/dune6ff04d.output 2> /dev/null
+# Auto-detected concurrency: 64
+# disable binary cache
+$ /home/hyunsu/.opam/sparrow-4.11.0+flambda/bin/ocamlc.opt -config > /tmp/dune05357f.output
+# Dune context:
+#  { name = "default"
+#  ; kind = "default"
+#  ; profile = Dyn
+#  ; merlin = true
+#  ; for_host = None
+#  ; fdo_target_exe = None
+#  ; build_dir = "default"
+#  ; toplevel_path =
+#      Some External "/home/hyunsu/.opam/sparrow-4.11.0+flambda/lib/toplevel"
+#  ; ocaml_bin = External "/home/hyunsu/.opam/sparrow-4.11.0+flambda/bin"
+#  ; ocaml = Ok External "/home/hyunsu/.opam/sparrow-4.11.0+flambda/bin/ocaml"
+#  ; ocamlc =
+#      External "/home/hyunsu/.opam/sparrow-4.11.0+flambda/bin/ocamlc.opt"
+#  ; ocamlopt =
+#      Ok External "/home/hyunsu/.opam/sparrow-4.11.0+flambda/bin/ocamlopt.opt"
+#  ; ocamldep =
+#      Ok External "/home/hyunsu/.opam/sparrow-4.11.0+flambda/bin/ocamldep.opt"
+#  ; ocamlmklib =
+#      Ok
+#        External
+#          "/home/hyunsu/.opam/sparrow-4.11.0+flambda/bin/ocamlmklib.opt"
+#  ; env =
+#      map
+#        { "DUNE_OCAML_HARDCODED" :
+#            "/home/hyunsu/.opam/sparrow-4.11.0+flambda/lib"
+#        ; "DUNE_OCAML_STDLIB" :
+#            "/home/hyunsu/.opam/sparrow-4.11.0+flambda/lib/ocaml"
+#        ; "DUNE_SOURCEROOT" : "/home/hyunsu/workspace/pldi19-artifact/bingo"
+#        ; "INSIDE_DUNE" :
+#            "/home/hyunsu/workspace/pldi19-artifact/bingo/_build/default"
+#        ; "OCAMLFIND_IGNORE_DUPS_IN" :
+#            "/home/hyunsu/workspace/pldi19-artifact/bingo/_build/install/default/lib"
+#        ; "OCAMLPATH" :
+#            "/home/hyunsu/workspace/pldi19-artifact/bingo/_build/install/default/lib"
+#        ; "OCAMLTOP_INCLUDE_PATH" :
+#            "/home/hyunsu/workspace/pldi19-artifact/bingo/_build/install/default/lib/toplevel"
+#        ; "OCAML_COLOR" : "always"
+#        ; "OPAMCOLOR" : "always"
+#        }
+#  ; findlib_path =
+#      [ External "/home/hyunsu/.opam/sparrow-4.11.0+flambda/lib" ]
+#  ; arch_sixtyfour = true
+#  ; natdynlink_supported = true
+#  ; supports_shared_libraries = true
+#  ; ocaml_config =
+#      { version = "4.11.0"
+#      ; standard_library_default =
+#          "/home/hyunsu/.opam/sparrow-4.11.0+flambda/lib/ocaml"
+#      ; standard_library =
+#          "/home/hyunsu/.opam/sparrow-4.11.0+flambda/lib/ocaml"
+#      ; standard_runtime = "the_standard_runtime_variable_was_deleted"
+#      ; ccomp_type = "cc"
+#      ; c_compiler = "gcc"
+#      ; ocamlc_cflags = [ "-O2"; "-fno-strict-aliasing"; "-fwrapv"; "-fPIC" ]
+#      ; ocamlc_cppflags = [ "-D_FILE_OFFSET_BITS=64"; "-D_REENTRANT" ]
+#      ; ocamlopt_cflags =
+#          [ "-O2"; "-fno-strict-aliasing"; "-fwrapv"; "-fPIC" ]
+#      ; ocamlopt_cppflags = [ "-D_FILE_OFFSET_BITS=64"; "-D_REENTRANT" ]
+#      ; bytecomp_c_compiler =
+#          [ "gcc"
+#          ; "-O2"
+#          ; "-fno-strict-aliasing"
+#          ; "-fwrapv"
+#          ; "-fPIC"
+#          ; "-D_FILE_OFFSET_BITS=64"
+#          ; "-D_REENTRANT"
+#          ]
+#      ; bytecomp_c_libraries = [ "-lm"; "-ldl"; "-lpthread" ]
+#      ; native_c_compiler =
+#          [ "gcc"
+#          ; "-O2"
+#          ; "-fno-strict-aliasing"
+#          ; "-fwrapv"
+#          ; "-fPIC"
+#          ; "-D_FILE_OFFSET_BITS=64"
+#          ; "-D_REENTRANT"
+#          ]
+#      ; native_c_libraries = [ "-lm"; "-ldl" ]
+#      ; cc_profile = []
+#      ; architecture = "amd64"
+#      ; model = "default"
+#      ; int_size = 63
+#      ; word_size = 64
+#      ; system = "linux"
+#      ; asm = [ "as" ]
+#      ; asm_cfi_supported = true
+#      ; with_frame_pointers = false
+#      ; ext_exe = ""
+#      ; ext_obj = ".o"
+#      ; ext_asm = ".s"
+#      ; ext_lib = ".a"
+#      ; ext_dll = ".so"
+#      ; os_type = "Unix"
+#      ; default_executable_name = "a.out"
+#      ; systhread_supported = true
+#      ; host = "x86_64-pc-linux-gnu"
+#      ; target = "x86_64-pc-linux-gnu"
+#      ; profiling = false
+#      ; flambda = true
+#      ; spacetime = false
+#      ; safe_string = true
+#      ; exec_magic_number = "Caml1999X028"
+#      ; cmi_magic_number = "Caml1999I028"
+#      ; cmo_magic_number = "Caml1999O028"
+#      ; cma_magic_number = "Caml1999A028"
+#      ; cmx_magic_number = "Caml1999y028"
+#      ; cmxa_magic_number = "Caml1999z028"
+#      ; ast_impl_magic_number = "Caml1999M028"
+#      ; ast_intf_magic_number = "Caml1999N028"
+#      ; cmxs_magic_number = "Caml1999D028"
+#      ; cmt_magic_number = "Caml1999T028"
+#      ; natdynlink_supported = true
+#      ; supports_shared_libraries = true
+#      ; windows_unicode = false
+#      }
+#  }

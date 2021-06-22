@@ -3,9 +3,8 @@
 set -e
 
 echo "Build Sparrow"
-git clone https://github.com/KihongHeo/sparrow.git
+git clone https://github.com/prosyslab/sparrow-incubator.git sparrow
 pushd sparrow
-git checkout pldi19
 ./build.sh
 popd
 

@@ -33,6 +33,11 @@ def splitTuple(t):
     fields = fields[:-1]
     return (relName, fields)
 
+def getDUPathClause(clauseSet):
+    for clause in list(clauseSet):
+        if clause.startswith('DUPath'):
+            return clause
+
 ########################################################################################################################
 # 1. Read clauses
 
@@ -55,14 +60,15 @@ for clause in clauses:
     if not clause[2].startswith('Alarm('): ans.add(clause)
     else:
         alarmRelName, alarmFields = splitTuple(clause[2])
-        assert len(clause[1]) == 1
+        # assert len(clause[1]) == 1
 
-        antecedent = set(clause[1]).pop()
-        antRelName, antFields = splitTuple(antecedent)
+        # antecedent = set(clause[1]).pop()
+        antecedentDUPath = getDUPathClause(set(clause[1]))
+        antRelName, antFields = splitTuple(antecedentDUPath)
         assert antRelName == 'DUPath'
         assert antFields == alarmFields
 
-        newAnts = frozenset({ antecedent, 'FX({})'.format(antFields) })
+        newAnts = frozenset({ antecedentDUPath, 'FX({})'.format(antFields) })
 
         ans.add((clause[0], newAnts, clause[2]))
 

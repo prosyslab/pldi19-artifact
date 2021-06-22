@@ -1,31 +1,77 @@
 Running Delta Bingo (sem)
 Step 1: Translating constraints
 204 syntactically new alarms detected
-[22:18:22] INFO [root.<module>:14] Hello!
-[22:18:23] INFO [root.<module>:47] Read 79253 clauses
-[22:18:23] INFO [root.<module>:77] Bye!
-[22:18:23] INFO [root.<module>:14] Hello!
-[22:18:24] INFO [root.<module>:47] Read 80839 clauses
-[22:18:24] INFO [root.<module>:77] Bye!
+[08:01:42] INFO [root.<module>:14] Hello!
+[08:01:42] INFO [root.<module>:52] Read 79067 clauses
+[08:01:42] INFO [root.<module>:83] Bye!
+[08:01:43] INFO [root.<module>:14] Hello!
+[08:01:43] INFO [root.<module>:52] Read 80666 clauses
+[08:01:44] INFO [root.<module>:83] Bye!
 Finished translating constraints (2 sec)
 Step 2: Merging constraints
-[22:18:25] INFO [root.<module>:44] Hello!
-[22:18:26] INFO [root.<module>:74] Read 79253 old clauses and 80839 new clauses
-[22:18:26] INFO [root.<module>:76] 54594 clauses occur in common between the two sets
-[22:18:26] INFO [root.<module>:86] Read 916 old alarms and 913 new alarms: 709 alarms occur in common
-[22:18:26] INFO [root.<module>:98] Old clauses cover 90345 tuples: 28519 EDB and 61826 IDB tuples
-[22:18:26] INFO [root.<module>:105] New clauses cover 91517 tuples: 28951 EDB and 62566 IDB tuples
-[22:18:26] INFO [root.<module>:109] 62242 tuples occur in common: 18395 common EDBs
-[22:18:30] INFO [root.<module>:203] Printing all EDB tuples to benchmark/grep-2.19/sparrow-out/interval/merged_bnet_0.001/AllEDB.txt
-[22:18:31] INFO [root.<module>:248] Bye!
+[08:01:44] INFO [root.<module>:44] Hello!
+[08:01:45] INFO [root.<module>:74] Read 79067 old clauses and 80666 new clauses
+[08:01:45] INFO [root.<module>:76] 32169 clauses occur in common between the two sets
+[08:01:45] INFO [root.<module>:84] Read 916 old alarms and 912 new alarms: 708 alarms occur in common
+[08:01:45] INFO [root.<module>:96] Old clauses cover 115040 tuples: 53307 EDB and 61733 IDB tuples
+[08:01:46] INFO [root.<module>:103] New clauses cover 116490 tuples: 54011 EDB and 62479 IDB tuples
+[08:01:46] INFO [root.<module>:109] 63471 tuples occur in common: 19699 common EDBs
+bingo/mb-eps.py:127: DeprecationWarning: The 'warn' function is deprecated, use 'warning' instead
+  logging.warn('Discovered clause {} which violates common clause hypothesis 1'.format(clause))
+[08:01:46] WARNING [root.<module>:127] Discovered clause ('Alarm16', frozenset({'DUPath(_G_-ENTRY,dfastate-49823)', 'FX(_G_-ENTRY,dfastate-49823)'}), 'Alarm(_G_-ENTRY,dfastate-49823)') which violates common clause hypothesis 1
+[08:01:46] WARNING [root.<module>:127] Discovered clause ('Alarm16', frozenset({'DUPath(_G_-ENTRY,dfastate-49803)', 'FX(_G_-ENTRY,dfastate-49803)'}), 'Alarm(_G_-ENTRY,dfastate-49803)') which violates common clause hypothesis 1
+[08:01:46] WARNING [root.<module>:127] Discovered clause ('Alarm16', frozenset({'FX(_G_-ENTRY,dfastate-49751)', 'DUPath(_G_-ENTRY,dfastate-49751)'}), 'Alarm(_G_-ENTRY,dfastate-49751)') which violates common clause hypothesis 1
+[08:01:46] WARNING [root.<module>:127] Discovered clause ('Alarm16', frozenset({'DUPath(_G_-ENTRY,dfastate-49752)', 'FX(_G_-ENTRY,dfastate-49752)'}), 'Alarm(_G_-ENTRY,dfastate-49752)') which violates common clause hypothesis 1
+[08:01:46] WARNING [root.<module>:127] Discovered clause ('Alarm16', frozenset({'FX(_G_-ENTRY,dfastate-49864)', 'DUPath(_G_-ENTRY,dfastate-49864)'}), 'Alarm(_G_-ENTRY,dfastate-49864)') which violates common clause hypothesis 1
+[08:01:46] WARNING [root.<module>:127] Discovered clause ('Alarm16', frozenset({'DUPath(_G_-ENTRY,dfastate-49728)', 'FX(_G_-ENTRY,dfastate-49728)'}), 'Alarm(_G_-ENTRY,dfastate-49728)') which violates common clause hypothesis 1
+[08:01:46] WARNING [root.<module>:127] Discovered clause ('Alarm16', frozenset({'DUPath(_G_-ENTRY,dfastate-49726)', 'FX(_G_-ENTRY,dfastate-49726)'}), 'Alarm(_G_-ENTRY,dfastate-49726)') which violates common clause hypothesis 1
+[08:01:46] WARNING [root.<module>:127] Discovered clause ('Alarm16', frozenset({'FX(_G_-ENTRY,dfastate-49725)', 'DUPath(_G_-ENTRY,dfastate-49725)'}), 'Alarm(_G_-ENTRY,dfastate-49725)') which violates common clause hypothesis 1
+[08:01:46] WARNING [root.<module>:127] Discovered clause ('Alarm16', frozenset({'FX(_G_-ENTRY,dfastate-49959)', 'DUPath(_G_-ENTRY,dfastate-49959)'}), 'Alarm(_G_-ENTRY,dfastate-49959)') which violates common clause hypothesis 1
+[08:01:46] WARNING [root.<module>:127] Discovered clause ('Alarm16', frozenset({'FX(_G_-ENTRY,dfastate-49727)', 'DUPath(_G_-ENTRY,dfastate-49727)'}), 'Alarm(_G_-ENTRY,dfastate-49727)') which violates common clause hypothesis 1
+[08:01:46] WARNING [root.<module>:127] Discovered clause ('Alarm16', frozenset({'FX(_G_-ENTRY,dfastate-49844)', 'DUPath(_G_-ENTRY,dfastate-49844)'}), 'Alarm(_G_-ENTRY,dfastate-49844)') which violates common clause hypothesis 1
+[08:01:46] WARNING [root.<module>:127] Discovered clause ('Alarm16', frozenset({'FX(_G_-ENTRY,dfastate-49846)', 'DUPath(_G_-ENTRY,dfastate-49846)'}), 'Alarm(_G_-ENTRY,dfastate-49846)') which violates common clause hypothesis 1
+[08:01:46] WARNING [root.<module>:127] Discovered clause ('Alarm9', frozenset({'DUPath(_G_-ENTRY,kwsprep-44698)', 'FX(_G_-ENTRY,kwsprep-44698)'}), 'Alarm(_G_-ENTRY,kwsprep-44698)') which violates common clause hypothesis 1
+[08:01:46] WARNING [root.<module>:127] Discovered clause ('Alarm16', frozenset({'FX(_G_-ENTRY,dfastate-49862)', 'DUPath(_G_-ENTRY,dfastate-49862)'}), 'Alarm(_G_-ENTRY,dfastate-49862)') which violates common clause hypothesis 1
+[08:01:46] WARNING [root.<module>:127] Discovered clause ('Alarm16', frozenset({'DUPath(_G_-ENTRY,dfastate-49822)', 'FX(_G_-ENTRY,dfastate-49822)'}), 'Alarm(_G_-ENTRY,dfastate-49822)') which violates common clause hypothesis 1
+[08:01:46] WARNING [root.<module>:127] Discovered clause ('Alarm16', frozenset({'DUPath(_G_-ENTRY,dfastate-49863)', 'FX(_G_-ENTRY,dfastate-49863)'}), 'Alarm(_G_-ENTRY,dfastate-49863)') which violates common clause hypothesis 1
+[08:01:46] WARNING [root.<module>:127] Discovered clause ('Alarm16', frozenset({'DUPath(_G_-ENTRY,dfastate-49938)', 'FX(_G_-ENTRY,dfastate-49938)'}), 'Alarm(_G_-ENTRY,dfastate-49938)') which violates common clause hypothesis 1
+[08:01:46] WARNING [root.<module>:127] Discovered clause ('Alarm26', frozenset({'FX(_G_-ENTRY,match_mb_charset-50694)', 'DUPath(_G_-ENTRY,match_mb_charset-50694)'}), 'Alarm(_G_-ENTRY,match_mb_charset-50694)') which violates common clause hypothesis 1
+[08:01:46] WARNING [root.<module>:127] Discovered clause ('Alarm16', frozenset({'DUPath(_G_-ENTRY,dfastate-49840)', 'FX(_G_-ENTRY,dfastate-49840)'}), 'Alarm(_G_-ENTRY,dfastate-49840)') which violates common clause hypothesis 1
+[08:01:46] WARNING [root.<module>:127] Discovered clause ('Alarm16', frozenset({'FX(_G_-ENTRY,dfastate-49838)', 'DUPath(_G_-ENTRY,dfastate-49838)'}), 'Alarm(_G_-ENTRY,dfastate-49838)') which violates common clause hypothesis 1
+[08:01:46] WARNING [root.<module>:127] Discovered clause ('Alarm16', frozenset({'FX(_G_-ENTRY,dfastate-49839)', 'DUPath(_G_-ENTRY,dfastate-49839)'}), 'Alarm(_G_-ENTRY,dfastate-49839)') which violates common clause hypothesis 1
+bingo/mb-eps.py:136: DeprecationWarning: The 'warn' function is deprecated, use 'warning' instead
+  logging.warn('Discovered clause {} which violates common clause hypothesis 2'.format(clause))
+[08:01:46] WARNING [root.<module>:136] Discovered clause ('Alarm16', frozenset({'DUPath(_G_-ENTRY,dfastate-49823)', 'FX(_G_-ENTRY,dfastate-49823)'}), 'Alarm(_G_-ENTRY,dfastate-49823)') which violates common clause hypothesis 2
+[08:01:46] WARNING [root.<module>:136] Discovered clause ('Alarm16', frozenset({'DUPath(_G_-ENTRY,dfastate-49803)', 'FX(_G_-ENTRY,dfastate-49803)'}), 'Alarm(_G_-ENTRY,dfastate-49803)') which violates common clause hypothesis 2
+[08:01:46] WARNING [root.<module>:136] Discovered clause ('Alarm16', frozenset({'FX(_G_-ENTRY,dfastate-49751)', 'DUPath(_G_-ENTRY,dfastate-49751)'}), 'Alarm(_G_-ENTRY,dfastate-49751)') which violates common clause hypothesis 2
+[08:01:46] WARNING [root.<module>:136] Discovered clause ('Alarm16', frozenset({'DUPath(_G_-ENTRY,dfastate-49752)', 'FX(_G_-ENTRY,dfastate-49752)'}), 'Alarm(_G_-ENTRY,dfastate-49752)') which violates common clause hypothesis 2
+[08:01:46] WARNING [root.<module>:136] Discovered clause ('Alarm16', frozenset({'FX(_G_-ENTRY,dfastate-49864)', 'DUPath(_G_-ENTRY,dfastate-49864)'}), 'Alarm(_G_-ENTRY,dfastate-49864)') which violates common clause hypothesis 2
+[08:01:46] WARNING [root.<module>:136] Discovered clause ('Alarm16', frozenset({'DUPath(_G_-ENTRY,dfastate-49728)', 'FX(_G_-ENTRY,dfastate-49728)'}), 'Alarm(_G_-ENTRY,dfastate-49728)') which violates common clause hypothesis 2
+[08:01:46] WARNING [root.<module>:136] Discovered clause ('Alarm16', frozenset({'DUPath(_G_-ENTRY,dfastate-49726)', 'FX(_G_-ENTRY,dfastate-49726)'}), 'Alarm(_G_-ENTRY,dfastate-49726)') which violates common clause hypothesis 2
+[08:01:46] WARNING [root.<module>:136] Discovered clause ('Alarm16', frozenset({'FX(_G_-ENTRY,dfastate-49725)', 'DUPath(_G_-ENTRY,dfastate-49725)'}), 'Alarm(_G_-ENTRY,dfastate-49725)') which violates common clause hypothesis 2
+[08:01:46] WARNING [root.<module>:136] Discovered clause ('Alarm16', frozenset({'FX(_G_-ENTRY,dfastate-49959)', 'DUPath(_G_-ENTRY,dfastate-49959)'}), 'Alarm(_G_-ENTRY,dfastate-49959)') which violates common clause hypothesis 2
+[08:01:46] WARNING [root.<module>:136] Discovered clause ('Alarm16', frozenset({'FX(_G_-ENTRY,dfastate-49727)', 'DUPath(_G_-ENTRY,dfastate-49727)'}), 'Alarm(_G_-ENTRY,dfastate-49727)') which violates common clause hypothesis 2
+[08:01:46] WARNING [root.<module>:136] Discovered clause ('Alarm16', frozenset({'FX(_G_-ENTRY,dfastate-49844)', 'DUPath(_G_-ENTRY,dfastate-49844)'}), 'Alarm(_G_-ENTRY,dfastate-49844)') which violates common clause hypothesis 2
+[08:01:46] WARNING [root.<module>:136] Discovered clause ('Alarm16', frozenset({'FX(_G_-ENTRY,dfastate-49846)', 'DUPath(_G_-ENTRY,dfastate-49846)'}), 'Alarm(_G_-ENTRY,dfastate-49846)') which violates common clause hypothesis 2
+[08:01:46] WARNING [root.<module>:136] Discovered clause ('Alarm9', frozenset({'DUPath(_G_-ENTRY,kwsprep-44698)', 'FX(_G_-ENTRY,kwsprep-44698)'}), 'Alarm(_G_-ENTRY,kwsprep-44698)') which violates common clause hypothesis 2
+[08:01:46] WARNING [root.<module>:136] Discovered clause ('Alarm16', frozenset({'FX(_G_-ENTRY,dfastate-49862)', 'DUPath(_G_-ENTRY,dfastate-49862)'}), 'Alarm(_G_-ENTRY,dfastate-49862)') which violates common clause hypothesis 2
+[08:01:46] WARNING [root.<module>:136] Discovered clause ('Alarm16', frozenset({'DUPath(_G_-ENTRY,dfastate-49822)', 'FX(_G_-ENTRY,dfastate-49822)'}), 'Alarm(_G_-ENTRY,dfastate-49822)') which violates common clause hypothesis 2
+[08:01:46] WARNING [root.<module>:136] Discovered clause ('Alarm16', frozenset({'DUPath(_G_-ENTRY,dfastate-49863)', 'FX(_G_-ENTRY,dfastate-49863)'}), 'Alarm(_G_-ENTRY,dfastate-49863)') which violates common clause hypothesis 2
+[08:01:46] WARNING [root.<module>:136] Discovered clause ('Alarm16', frozenset({'DUPath(_G_-ENTRY,dfastate-49938)', 'FX(_G_-ENTRY,dfastate-49938)'}), 'Alarm(_G_-ENTRY,dfastate-49938)') which violates common clause hypothesis 2
+[08:01:46] WARNING [root.<module>:136] Discovered clause ('Alarm26', frozenset({'FX(_G_-ENTRY,match_mb_charset-50694)', 'DUPath(_G_-ENTRY,match_mb_charset-50694)'}), 'Alarm(_G_-ENTRY,match_mb_charset-50694)') which violates common clause hypothesis 2
+[08:01:46] WARNING [root.<module>:136] Discovered clause ('Alarm16', frozenset({'DUPath(_G_-ENTRY,dfastate-49840)', 'FX(_G_-ENTRY,dfastate-49840)'}), 'Alarm(_G_-ENTRY,dfastate-49840)') which violates common clause hypothesis 2
+[08:01:46] WARNING [root.<module>:136] Discovered clause ('Alarm16', frozenset({'FX(_G_-ENTRY,dfastate-49838)', 'DUPath(_G_-ENTRY,dfastate-49838)'}), 'Alarm(_G_-ENTRY,dfastate-49838)') which violates common clause hypothesis 2
+[08:01:46] WARNING [root.<module>:136] Discovered clause ('Alarm16', frozenset({'FX(_G_-ENTRY,dfastate-49839)', 'DUPath(_G_-ENTRY,dfastate-49839)'}), 'Alarm(_G_-ENTRY,dfastate-49839)') which violates common clause hypothesis 2
+[08:01:50] INFO [root.<module>:203] Printing all EDB tuples to benchmark/grep-2.19/sparrow-out/interval/merged_bnet_0.001/AllEDB.txt
+[08:01:51] INFO [root.<module>:248] Bye!
 SemAllAlarm.txt contains the same new tuples as SemAllAlarm.txt.ukd. Good-good!
-Finished merging constraints (31 sec)
+Finished merging constraints (39 sec)
 Step 3: Building Bayesian Network
-Finished building Bayeisan network (24 sec)
+Finished building Bayeisan network (32 sec)
 Step 4: Executing Interaction
-Interaction completes (204 sec)
-Total alarms    : 913
+Interaction completes (20376 sec)
+Total alarms    : 912
 True alarms     : 1
-False alarms    : 912
-Last true alarm : 9
-AUC: 0.9912280701754386
+False alarms    : 911
+Last true alarm : 76
+AUC: 0.9176728869374314

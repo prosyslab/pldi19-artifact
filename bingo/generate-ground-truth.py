@@ -10,7 +10,7 @@ analysis = sys.argv[2]
 
 label_file = problem_dir + "/label.json"
 node_file = problem_dir + "/sparrow-out/node.json"
-alarm_file = problem_dir + "/sparrow-out/" + analysis + "/datalog/Alarm.facts"
+alarm_file = problem_dir + "/sparrow-out/" + analysis + "/datalog/Alarm.csv"
 groundtruth_file = problem_dir + "/sparrow-out/" + analysis +"/datalog/GroundTruth.facts"
 
 if not os.path.isfile(label_file):

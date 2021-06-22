@@ -327,7 +327,7 @@ def trans_node(node, old_node_info, new_node_info, line_matching, second=False):
 def trans_tuple(tup, old_node_info, new_node_info, line_matching, second=False):
     name, body = tup.split('(', 1)
     if name == 'DUEdge' or name == 'DUPath' or name == 'TrueCond' \
-            or name == 'FalseCond' or 'TrueBranch' or 'FalseBranch' \
+            or name == 'FalseCond' or name == 'TrueBranch' or name =='FalseBranch' \
             or name == 'Alarm':
         elems = [ literal.strip() for literal in re.split('\(|,|\)', tup)[:-1] ][1:]
         trans = [ trans_node(n, old_node_info, new_node_info, line_matching, second=second) \
