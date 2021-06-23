@@ -49,7 +49,7 @@ logging.info('Hello!')
 def lit2Tuple(literal):
     return literal if not literal.startswith('NOT ') else literal[len('NOT '):]
 
-basicTuples = ["DUEdge", "DUPath", "TrueCond", "TrueBranch", "FalseCond", "FalseBranch", "Alarm"]
+basicTuples = ["DUEdge", "DUPath", "TrueCond", "TrueBranch", "FalseCond", "FalseBranch", "Alarm", "FX"]
 
 def isBasicTuple(t):
     return t.split('(')[0] in basicTuples
