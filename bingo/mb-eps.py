@@ -81,13 +81,14 @@ def readClauses(filename):
     return frozenset(rcs)
 
 # transform clauses to reduced ones without BayeSmith features
+# ignore rulename because we do not translate non-basic tuples in a principled way
 def readBasicClauses(filename):
     lines = { line.strip() for line in open(filename) }
     rlines = { tuple([ cle.strip() for cle in line.split(':') if len(cle.strip()) > 0 ]) for line in lines }
     for ruleName, clauseStr in rlines: assert ruleName.count(' ') == 0
     rcls = { (ruleName, tuple([ literal.strip() for literal in clauseStr.split(', ') ])) \
              for ruleName, clauseStr in rlines }
-    rcs = { (ruleName, clause2BasicAntecedents(clauseList), clause2Consequent(clauseList)) \
+    rcs = { (clause2BasicAntecedents(clauseList), clause2Consequent(clauseList)) \
             for ruleName, clauseList in rcls }
     return frozenset(rcs)
 
@@ -201,7 +202,7 @@ for ruleName, antecedents, consequent in newClauses:
     consequentOld = markTupleOld(consequent)
     consequentNew = markTupleNew(consequent)
 
-    if (ruleName,  antecedents2BasicAntecedents(antecedents), consequent) in oldBasicClauses:
+    if (antecedents2BasicAntecedents(antecedents), consequent) in oldBasicClauses:
         splitClauses.add((ruleName, antCombinationAllOld, consequentOld))
         emittedConsequents.add(consequentOld)
 
